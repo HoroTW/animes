@@ -5,11 +5,33 @@ import re
 import yaml
 
 
+class Episode:
+    """Class to store the episode details"""
+
+    def __init__(self, title, url):
+        self.title = title
+        self.url = url
+
+    def __repr__(self):
+        serialized = yaml.dump({"Title": self.title, "Url": self.url}, sort_keys=False)
+        return serialized
+
+    def __eq__(self, other):
+        return self.title == other.title and self.url == other.url
+
+    def __hash__(self):
+        return hash((self.title, self.url))
+
+    def __lt__(self, other):  # sort by url
+        return self.url < other.url
+
+
 class Anime:
     """Class to store the anime details"""
 
-    def __init__(self, title, cover_url, episode_list):
+    def __init__(self, title, series_url, cover_url, episode_list):
         self.title = title
+        self.series_url = series_url
         self.cover_url = cover_url
         self.episode_list = episode_list
 
@@ -17,6 +39,7 @@ class Anime:
         serialized = yaml.dump(
             {
                 "Title": self.title,
+                "Series_Url": self.series_url,
                 "Cover": self.cover_url,
                 "Episode_List": list(self.episode_list),
             },
