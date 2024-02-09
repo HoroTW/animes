@@ -71,7 +71,7 @@ class AnimePlugin(AnimeInterface):
         assert episodes, f"No episodes in current season for the anime: {url}"
 
         for ep in episodes.find_all("tr"):  # Check if the episode is watched
-            if ep["class"] == ["watched"]:
+            if "watched" in ep["class"]:
                 continue
 
             link = base_url + ep.find("a")["href"]
