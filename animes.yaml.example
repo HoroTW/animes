@@ -1,3 +1,8 @@
 currently_watching:
   pluginOfPage.com:
+    # username: # these are possible if the plugin supports the login action
+    # password: # if not you would need to use the extra_headers with cookies
+    # extra_headers:
+      # Cookie: "somethingcookie=something; anotherCookie=foobar"
+    series: # this is the list of series for the plugin
     - https://url-to-series-on-the-page.com/e.g._the-series-name-or-number-or-smth

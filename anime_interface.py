@@ -28,7 +28,7 @@ class Anime:
 class AnimeInterface:
     """The interface for the anime details"""
 
-    plugin_identifier: str = "identifier_of_the_plugin"
+    extra_headers: dict = {}
 
     def get_anime_from_url(self, url) -> Anime:
         """Get the anime details from the website"""
@@ -38,9 +38,9 @@ class AnimeInterface:
         """Login to the website"""
         raise NotImplementedError("This method should be implemented by the plugin")
 
-    def set_extra_header(self, extra_headers):
-        """Set the cookies for the website"""
-        raise NotImplementedError("This method should be implemented by the plugin")
+    def add_extra_header(self, extra_header):
+        """Add extra header to the extra headers, used for the requests"""
+        self.extra_headers.update(extra_header)
 
     def get_base_url(self, url):
         """Get the base url of the website from the url provided"""
