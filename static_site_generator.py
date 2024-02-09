@@ -10,9 +10,10 @@ logger = logging.getLogger(__name__)
 # EXAMPLE Anime object:
 # Title: "Shin no Nakama ja Nai ... | Banished from the Hero\u2019s Party"
 # Cover: https://bs.to//public/images/cover/7993.jpg
+# Anime Base URL: https://bs.to/serie/Shin-no-Nakama-ja-Nai-Banished-from-the-Hero-s-Party
 # Episode_List:
-# - https://bs.to/serie/Shin-no-Nakama-ja-Nai-Banished-from-the-Hero-s-Party/2/5-The-Man-Who-Doesn-t-Get-Chill-Living/des
-# - https://bs.to/serie/Shin-no-Nakama-ja-Nai-Banished-from-the-Hero-s-Party/2/4-The-Red-String-of-Fate/des
+# - Title1: https://bs.to/serie/Shin-no-Nakama-ja-Nai-Banished-from-the-Hero-s-Party/2/5-The-Man-Who-Doesn-t-Get-Chill-Living/des
+# - Title2: https://bs.to/serie/Shin-no-Nakama-ja-Nai-Banished-from-the-Hero-s-Party/2/4-The-Red-String-of-Fate/des
 
 # The Page has a Dark Theme
 
@@ -39,6 +40,35 @@ def generate_static_site(anime_list: list[Anime]) -> str:
                 align-items: center;
                 margin: 20px;
             }
+            .anime-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 20px;
+                padding: 20px;
+                align-items: start;
+                justify-items: center;
+            }
+            .episode-list {
+                text-align: center;
+                padding-top: 20px;
+                padding-bottom: 10px;
+                display: flex;
+                flex-direction: column;
+
+            }
+            .anime_title {
+                height: 50px;
+                text-align: center;
+                color: white;
+                overflow: hidden;
+            }
+            h1 {
+                text-align: center;
+                text-decoration: underline;
+                color: orange;
+                font-size: 40px;
+                text-shadow: 0px 0px 5px darkorange;
+            }
             h2 {
                 margin-bottom: 10px;
             }
@@ -49,31 +79,45 @@ def generate_static_site(anime_list: list[Anime]) -> str:
                 border-radius: 10px;
             }
             a {
-                color: white;
+                color: orange;
                 text-decoration: none;
                 margin: 5px;
+            }
+
+            .episode-list a:hover {
+                color: gold;
+            }
+
+            .episode-list a:visited {
+                color: darkred;
             }
         </style>
     </head>
     <body>
     """
 
-    html = head + """
+    html = (
+        head
+        + """
     <h1>Anime Overview</h1>
+    <div class="anime-grid">
     """
+    )
 
+    # a episode obj has title and episode_url
     for anime in anime_list:
         html += f"""
         <div class="anime">
-            <h2>{anime.title}</h2>
-            <img src="{anime.cover_url}" alt="{anime.title}">
-            <div>
-                {"".join(f'<a href="{episode}">Link: {episode}</a><br>' for episode in sorted(anime.episode_list))}
-            </div>
-        </div>
+            <h2 class=anime_title><a class=anime_title href="{anime.series_url}">{anime.title}</a></h2>
+            <a href="{anime.series_url}"><img src="{anime.cover_url}" alt="{anime.title}"></a>
+            <div class="episode-list">
+                {"".join(f'<a href="{episode.url}">{episode.title}</a>' for episode in anime.episode_list)}
+            </div> <!-- episode-list -->
+        </div> <!-- anime -->
         """
 
     html += """
+    </div> <!-- anime-grid -->
     </body>
     </html>
     """
