@@ -1,9 +1,10 @@
 """The plugin for the website bs.to"""
 
 import logging
+import re
 from bs4 import BeautifulSoup
 import requests
-from anime_interface import Anime, AnimeInterface
+from anime_interface import Anime, AnimeInterface, Episode
 
 # extend/implement the AnimeInterface
 logger = logging.getLogger(__name__)
@@ -28,7 +29,7 @@ class AnimePlugin(AnimeInterface):
         assert page.status_code == 200, f"The page could not be fetched for the url: {url}"
         soup = BeautifulSoup(page.content, "html.parser")
 
-        new_episode_links = []
+        new_episodes = []
 
         seasons = soup.find("div", class_="seasons")
         assert seasons, f"No seasons found for the anime: {url}, pls report this issue"
@@ -40,15 +41,18 @@ class AnimePlugin(AnimeInterface):
 
             # New season found
             season_url = base_url + season.find("a")["href"]
-            new_episode_links.extend(self.get_season_episodes(season_url))
 
-        logger.debug("The new episodes for the anime are: %s", new_episode_links)
+            new_episodes.extend(self.get_season_episodes(season_url))
+
+        logger.debug("The new episodes for the anime are: %s", new_episodes)
 
         # Get Title of the anime
         title = soup.find("div", id="sp_left").find("h2").text.strip().split("\n")[0]
         cover_image = base_url + soup.find("div", id="sp_right").find("img")["src"]
+        series_url = re.search(r"https?://bs.to/serie/.*/?[0-9]*/?[a-zA-Z]{0,3}", url).group(0)
+        new_episodes = sorted(set(new_episodes))
 
-        return Anime(title, cover_image, set(new_episode_links))
+        return Anime(title, series_url, cover_image, new_episodes)
 
     def get_season_episodes(self, url):
         """Get the anime details from the website"""
@@ -70,6 +74,8 @@ class AnimePlugin(AnimeInterface):
             if ep["class"] == ["watched"]:
                 continue
 
-            new_episode_links.append(base_url + ep.find("a")["href"])
+            link = base_url + ep.find("a")["href"]
+            ep_title = ep.find("a")["title"]
+            new_episode_links.append(Episode(ep_title, link))
 
         return new_episode_links
