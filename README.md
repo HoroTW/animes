@@ -1,11 +1,8 @@
 # Anime Watcher
 
-
-
-
-<div style="text-align: center;">
-    <img src="screenshots/Screenshot_01.png" alt="Screenshot" style="width: 50%;">
-</div>
+<p align="center">
+  <img src="screenshots/Screenshot_01.png" alt="Screenshot" style="width: 50%;">
+</p>
 
 Has a file to in which animes are listed that are currently being watched.
 Checks if new episodes are available.
