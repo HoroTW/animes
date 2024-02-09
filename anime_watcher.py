@@ -70,7 +70,8 @@ def main():
             logger.info("\n%s: %s", plugin_identifier, anime_url)
             anime_obj = plugin.get_anime_from_url(anime_url)
             print(anime_obj)
-            anime_list.append(anime_obj)
+            if anime_obj.episode_list:
+                anime_list.append(anime_obj)
 
     result_path = generate_static_site(anime_list)
     os.system(f"xdg-open {result_path}")
