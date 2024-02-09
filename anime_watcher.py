@@ -15,6 +15,7 @@ PLUGIN_FOLDER = "plugins"
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+os.chdir(os.path.dirname(__file__))  # so the anime.yaml and plugins folder can be found
 
 with open("animes.yaml", encoding="utf-8") as file:
     anime_file = yaml.load(file, Loader=yaml.FullLoader)
