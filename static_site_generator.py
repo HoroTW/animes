@@ -7,17 +7,6 @@ from anime_interface import Anime
 logger = logging.getLogger(__name__)
 
 
-# EXAMPLE Anime object:
-# Title: "Shin no Nakama ja Nai ... | Banished from the Hero\u2019s Party"
-# Cover: https://bs.to//public/images/cover/7993.jpg
-# Anime Base URL: https://bs.to/serie/Shin-no-Nakama-ja-Nai-Banished-from-the-Hero-s-Party
-# Episode_List:
-# - Title1: https://bs.to/serie/Shin-no-Nakama-ja-Nai-Banished-from-the-Hero-s-Party/2/5-The-Man-Who-Doesn-t-Get-Chill-Living/des
-# - Title2: https://bs.to/serie/Shin-no-Nakama-ja-Nai-Banished-from-the-Hero-s-Party/2/4-The-Red-String-of-Fate/des
-
-# The Page has a Dark Theme
-
-
 def generate_static_site(anime_list: list[Anime]) -> str:
     """Generate a static site with the anime details"""
 
