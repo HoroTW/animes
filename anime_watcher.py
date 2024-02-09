@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 This module is used to get the new episodes of the animes that are currently being watched
 """
