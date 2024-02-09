@@ -50,6 +50,7 @@ def generate_static_site(anime_list: list[Anime]) -> str:
                 text-align: center;
                 color: white;
                 overflow: hidden;
+                text-overflow: ellipsis;
             }
             h1 {
                 text-align: center;
@@ -80,6 +81,10 @@ def generate_static_site(anime_list: list[Anime]) -> str:
             .episode-list a:visited {
                 color: darkred;
             }
+            .ep-link {
+                height: 1em;
+                overflow: hidden;
+            }
         </style>
     </head>
     <body>
@@ -100,7 +105,7 @@ def generate_static_site(anime_list: list[Anime]) -> str:
             <h2 class=anime_title><a class=anime_title href="{anime.series_url}">{anime.title}</a></h2>
             <a href="{anime.series_url}"><img src="{anime.cover_url}" alt="{anime.title}"></a>
             <div class="episode-list">
-                {"".join(f'<a href="{episode.url}">{episode.title}</a>' for episode in anime.episode_list)}
+                {"".join(f'<a class="ep-link" href="{episode.url}">{episode.title}</a>' for episode in anime.episode_list)}
             </div> <!-- episode-list -->
         </div> <!-- anime -->
         """
