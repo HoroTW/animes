@@ -7,6 +7,7 @@ import logging
 import importlib.util
 import yaml
 from anime_interface import AnimeInterface
+from static_site_generator import generate_static_site
 
 PLUGIN_FOLDER = "plugins"
 
@@ -51,6 +52,7 @@ def get_plugin(plugin_identifier) -> AnimeInterface:
 
 def main():
     """The main function"""
+    anime_list = []
 
     for plugin_identifier in curr_watching:
         plugin = get_plugin(plugin_identifier)
@@ -68,6 +70,10 @@ def main():
             logger.info("\n%s: %s", plugin_identifier, anime_url)
             anime_obj = plugin.get_anime_from_url(anime_url)
             print(anime_obj)
+            anime_list.append(anime_obj)
+
+    result_path = generate_static_site(anime_list)
+    os.system(f"xdg-open {result_path}")
 
 
 if __name__ == "__main__":
