@@ -31,8 +31,7 @@ def get_plugin(plugin_identifier) -> AnimeInterface:
 
     for file_name in plugin_files:
         if file_name.endswith(".py"):  # Consider only Python files
-            # Remove the '.py' extension to get the plugin name
-            plugin_name = file_name[:-3]
+            plugin_name = file_name[:-3]  # Remove the '.py' extension to get the plugin name
             if plugin_name.replace(".", "_") != plugin_identifier.replace(".", "_"):
                 continue
 
@@ -48,8 +47,7 @@ def get_plugin(plugin_identifier) -> AnimeInterface:
             for name in dir(plugin_module):
                 if name == "AnimePlugin":
                     obj = getattr(plugin_module, name)
-                    # Instantiate the class and return it
-                    return obj()
+                    return obj()  # Instantiate the class and return it
 
 
 def main():
@@ -61,7 +59,7 @@ def main():
         username = curr_watching[plugin_identifier].get("username")
         password = curr_watching[plugin_identifier].get("password")
         if username and password:
-            plugin.login("username", "password")
+            plugin.login(username, password)
 
         extra_headers = curr_watching[plugin_identifier].get("extra_headers", None)
         if extra_headers:

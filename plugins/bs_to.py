@@ -13,19 +13,46 @@ logger = logging.getLogger(__name__)
 class AnimePlugin(AnimeInterface):
     """The interface for the anime details"""
 
+    session = requests.Session()
+
     def login(self, username, password):
         """Login to the website"""
-        raise NotImplementedError("BS.to plugin currently does not support login")
+
+        # first a plain GET to collect the security token
+        response = self.session.get("https://bs.to/", timeout=5)
+        assert response.status_code == 200, "The login page could not be fetched"
+
+        security_token = re.search(
+            r'<input type="hidden" name="security_token" value="(.*)" />',
+            response.text,
+        ).group(1)
+        logger.debug("The security token is: %s", security_token)  # not a secret so we can log it
+        assert security_token, "The security token could not be found"
+
+        data = {
+            "login[user]": username,
+            "login[pass]": password,
+            "security_token": security_token,
+        }
+
+        response = self.session.post("https://bs.to/", data=data, timeout=5)
+        assert response.status_code == 200, f"The login was not successful with the status code: {response.status_code}"
+        error = re.search(r'<div class="messageBox error">(.*?)</div>', response.text)
+        assert not error, f"The login was not successful, error: {error.group(1)}"
+        assert f"Hallo<strong>{username}</strong>" in response.text, "The login was not successful, unknown error"
+
+        logger.info("The login was successful")
 
     def get_anime_from_url(self, url) -> Anime:
         """Get the episodes from all seasons that are unwatched"""
 
         base_url = self.get_base_url(url)
+        self.session.headers.update(self.extra_headers)
 
         # Get the page
-        page = requests.get(url, timeout=5, headers=self.extra_headers)
+        page = self.session.get(url, timeout=5)
 
-        # check if the page was fetched successfully
+        # Check if the page was fetched successfully
         assert page.status_code == 200, f"The page could not be fetched for the url: {url}"
         soup = BeautifulSoup(page.content, "html.parser")
 
@@ -41,7 +68,6 @@ class AnimePlugin(AnimeInterface):
 
             # New season found
             season_url = base_url + season.find("a")["href"]
-
             new_episodes.extend(self.get_season_episodes(season_url))
 
         logger.debug("The new episodes for the anime are: %s", new_episodes)
@@ -59,7 +85,7 @@ class AnimePlugin(AnimeInterface):
         base_url = self.get_base_url(url)
 
         # Get the page
-        page = requests.get(url, timeout=5, headers=self.extra_headers)
+        page = self.session.get(url, timeout=5)
 
         # check if the page was fetched successfully
         assert page.status_code == 200, f"The page could not be fetched for the url: {url}"
