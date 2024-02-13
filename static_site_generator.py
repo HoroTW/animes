@@ -27,30 +27,40 @@ def generate_static_site(anime_list: list[Anime]) -> str:
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                margin: 20px;
             }
             .anime-grid {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-                gap: 20px;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 30px;
                 padding: 20px;
                 align-items: start;
                 justify-items: center;
             }
             .episode-list {
                 text-align: center;
-                padding-top: 20px;
-                padding-bottom: 10px;
-                display: flex;
-                flex-direction: column;
-
+                margin-top: 20px;
+                height: 100px;
+                width: 200px;
+                overflow-y: auto;
+                scrollbar-width: thin;
+                scrollbar-color: darkorange transparent;
+                backdrop-filter: brightness(0.65);
+                border-radius: 10px;
+                padding: 10px;
             }
             .anime_title {
-                height: 50px;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                word-wrap: break-word;
+                width: 200px;
                 text-align: center;
                 color: white;
                 overflow: hidden;
-                text-overflow: ellipsis;
+            }
+            .title_wrapper {
+                margin-bottom: 10px;
+                height: 90px;
             }
             h1 {
                 text-align: center;
@@ -59,31 +69,29 @@ def generate_static_site(anime_list: list[Anime]) -> str:
                 font-size: 40px;
                 text-shadow: 0px 0px 5px darkorange;
             }
-            h2 {
-                margin-bottom: 10px;
-            }
             img {
-                width: 200px;
-                height: 300px;
+                width: 180px;
+                height: 250px;
                 object-fit: cover;
                 border-radius: 10px;
             }
             a {
                 color: orange;
                 text-decoration: none;
-                margin: 5px;
             }
-
             .episode-list a:hover {
                 color: gold;
             }
-
             .episode-list a:visited {
                 color: darkred;
             }
             .ep-link {
-                height: 1em;
+                display: block;
+                font-size: 1em;
+                height: 1.2em;
                 overflow: hidden;
+                margin-left: 3px;
+                margin-bottom: 3px;
             }
         </style>
     </head>
@@ -102,7 +110,9 @@ def generate_static_site(anime_list: list[Anime]) -> str:
     for anime in anime_list:
         html += f"""
         <div class="anime">
-            <h2 class=anime_title><a class=anime_title href="{anime.series_url}">{anime.title}</a></h2>
+            <div class=title_wrapper>
+                <h2 class=anime_title><a class=anime_title href="{anime.series_url}">{anime.title}</a></h2>
+            </div>
             <a href="{anime.series_url}"><img src="{anime.cover_url}" alt="{anime.title}"></a>
             <div class="episode-list">
                 {"".join(f'<a class="ep-link" href="{episode.url}">{episode.title}</a>' for episode in anime.episode_list)}
